@@ -4,8 +4,17 @@ Website for the MULTI (Machine learning, Uncertainty visualization, Large-scale 
 
 ## Quick Start
 
-1. Open `index.html` in a browser
-2. No build step required
+1. Start a local server in the project directory:
+   ```bash
+   # Python 3
+   python -m http.server 8000
+
+   # Or Node.js
+   npx serve
+   ```
+2. Open `http://localhost:8000` in a browser
+
+**Note:** A local server is required because the site loads data files via AJAX. Opening `index.html` directly won't work due to browser security restrictions.
 
 ## Project Structure
 
