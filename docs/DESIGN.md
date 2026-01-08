@@ -40,7 +40,7 @@ The fundamental principle is **complete separation between content data and rend
 │                        /data/                               │
 │  group.json        - Group name, description, intro text    │
 │  team.json         - Array of team members                  │
-│  publications.json - Array of publications (from BibTeX)    │
+│  publications.bib  - Publications in BibTeX format          │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -58,19 +58,28 @@ The fundamental principle is **complete separation between content data and rend
 
 ### 3. Team Carousel
 - Horizontal scrollable/sliding cards
-- Each card shows: photo, name, position
+- Each card shows: photo, name, position, affiliation
 - Clicking a card:
   - Highlights the selected member
-  - Scrolls to publications section
+  - Shows member detail card
+  - Scrolls to member detail section
   - Filters publications by that author
-- "Show All" button to reset filter
+- Clicking selected card clears filter
 
-### 4. Publications List
+### 4. Member Detail Card
+- Research banner image (visualization highlight)
+- Photo, name, full titles list
+- Contact links (email, personal website)
+- Background paragraph (supports HTML links)
+- Research interests as tags
+- Hidden by default, shown when team card clicked
+
+### 5. Publications List
 - Filterable by author (via team card selection)
-- Searchable by title/keyword
-- Sortable by year (default: newest first)
-- Each entry shows: title, authors, venue, year, links (PDF/DOI)
-- Author names clickable to filter
+- Searchable by title/keyword/year
+- Sorted by year (newest first)
+- Each entry shows: title, authors, venue, year
+- Links: PDF, Copy BibTeX, DOI
 
 ## Data Flow
 
@@ -81,7 +90,7 @@ Page Load
     │
     ├─► Load team.json ──► Render team cards
     │
-    └─► Load publications.json ──► Render publication list
+    └─► Load publications.bib ──► Parse BibTeX ──► Render publication list
                                         │
 User Clicks Team Card                   │
     │                                   │
@@ -94,7 +103,8 @@ User Clicks Team Card                   │
 
 ```
 /multi-website/
-├── index.html              # Single page, minimal hardcoded content
+├── index.html              # Development shell (loads content.html)
+├── content.html            # Embeddable content for WordPress
 ├── /css/
 │   ├── variables.css       # CSS custom properties
 │   └── main.css            # All styles
@@ -103,9 +113,10 @@ User Clicks Team Card                   │
 ├── /data/
 │   ├── group.json          # Group description
 │   ├── team.json           # Team members
-│   └── publications.json   # Publications list
+│   └── publications.bib    # Publications in BibTeX format
 ├── /images/
-│   ├── /team/              # Team member photos
+│   ├── /team/              # Team member headshots
+│   ├── /research/          # Research visualization banners
 │   └── /logos/             # University and SCI logos
 └── /docs/                  # This documentation
 ```
@@ -133,9 +144,16 @@ User Clicks Team Card                   │
       "id": "chris-johnson",
       "name": "Chris Johnson",
       "position": "Distinguished Professor, Group Lead",
+      "affiliation": "Scientific Computing and Imaging Institute, University of Utah",
+      "titles": [
+        "Distinguished Professor of Computer Science",
+        "Founding Director, SCI Institute"
+      ],
       "email": "crj@sci.utah.edu",
+      "website": "https://users.cs.utah.edu/~crj/",
       "photo": "images/team/chris-johnson.jpg",
-      "background": "Brief background...",
+      "researchBanner": "images/research/chris-johnson-banner.jpg",
+      "background": "Biography paragraph with optional <a href=\"...\">HTML links</a>.",
       "researchInterests": ["Uncertainty Visualization", "Scientific Computing"],
       "authorVariants": ["C. R. Johnson", "Chris R. Johnson"]
     }
@@ -145,24 +163,22 @@ User Clicks Team Card                   │
 
 The `authorVariants` field is critical - it lists all name variations used in publications for accurate filtering.
 
-### publications.json
+### publications.bib
 
-```json
-{
-  "publications": [
-    {
-      "id": "SCI:Har2026a",
-      "title": "Publication Title",
-      "authors": ["J. Hart", "C. R. Johnson"],
-      "year": 2026,
-      "venue": "Journal Name",
-      "type": "journal",
-      "url": "https://...",
-      "doi": "10.xxxx/xxxxx"
-    }
-  ]
+Publications are stored in standard BibTeX format. The JavaScript parses this file client-side.
+
+```bibtex
+@Article{SCI:Har2026a,
+  author =    "J. Hart and C. R. Johnson",
+  title =     "Publication Title",
+  journal =   "Journal Name",
+  year =      "2026",
+  url =       "https://...",
+  doi =       "10.xxxx/xxxxx",
 }
 ```
+
+Supported entry types: `@Article`, `@InProceedings`, `@Book`, `@InCollection`, `@Misc`
 
 ## Interaction Design
 

@@ -46,13 +46,21 @@ This guide explains how to update website content **without touching any code**.
 
 **File:** `data/team.json`
 
-### Step 1: Prepare the Photo
+### Step 1: Prepare the Images
 
+**Headshot Photo:**
 1. Get a square photo (same width and height)
 2. Resize to 400x400 pixels
 3. Save as JPEG, under 100KB
 4. Name it `firstname-lastname.jpg` (all lowercase)
 5. Place in `images/team/` folder
+
+**Research Banner:**
+1. Get a wide image showcasing the member's research (visualization, figure, etc.)
+2. Recommended dimensions: 1200x400 pixels (3:1 aspect ratio)
+3. Save as JPEG or PNG, under 500KB
+4. Name it `firstname-lastname-banner.jpg` (all lowercase)
+5. Place in `images/research/` folder
 
 ### Step 2: Add the Entry
 
@@ -65,13 +73,19 @@ Open `data/team.json` and add a new entry to the `team` array:
       "id": "jane-doe",
       "name": "Jane Doe",
       "position": "PhD Student",
+      "affiliation": "Scientific Computing and Imaging Institute, University of Utah",
+      "titles": [
+        "PhD Student, School of Computing",
+        "Research Assistant, SCI Institute"
+      ],
       "email": "jane.doe@utah.edu",
+      "website": "https://janedoe.com",
       "photo": "images/team/jane-doe.jpg",
-      "background": "Jane joined the group in 2024 after completing her MS at MIT.",
+      "researchBanner": "images/research/jane-doe-banner.jpg",
+      "background": "Jane joined the group in 2024 after completing her MS at MIT. Her research focuses on machine learning applications in scientific visualization.",
       "researchInterests": ["Machine Learning", "Visualization"],
       "authorVariants": ["J. Doe", "Jane Doe", "J. A. Doe"]
-    },
-    // ... other team members
+    }
   ]
 }
 ```
@@ -82,10 +96,14 @@ Open `data/team.json` and add a new entry to the `team` array:
 |-------|-------------|---------|
 | `id` | Unique identifier, lowercase with hyphens | `"jane-doe"` |
 | `name` | Display name | `"Jane Doe"` |
-| `position` | Role in the group | `"PhD Student"` |
-| `email` | Contact email | `"jane@utah.edu"` |
-| `photo` | Path to photo file | `"images/team/jane-doe.jpg"` |
-| `background` | 1-2 sentence bio | `"Jane joined in 2024..."` |
+| `position` | Short title for team card | `"PhD Student"` |
+| `affiliation` | Primary institution | `"SCI Institute, University of Utah"` |
+| `titles` | Array of full titles/positions | `["PhD Student", "RA"]` |
+| `email` | Contact email (optional) | `"jane@utah.edu"` |
+| `website` | Personal website URL (optional) | `"https://janedoe.com"` |
+| `photo` | Path to headshot image | `"images/team/jane-doe.jpg"` |
+| `researchBanner` | Path to research visualization image | `"images/research/jane-doe-banner.jpg"` |
+| `background` | Biography paragraph (supports HTML links) | `"Jane joined in 2024..."` |
 | `researchInterests` | Array of research areas | `["ML", "Viz"]` |
 | `authorVariants` | Name variations in publications | `["J. Doe", "Jane Doe"]` |
 

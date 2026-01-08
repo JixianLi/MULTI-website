@@ -1,4 +1,4 @@
-// ABOUTME: Main JavaScript for MULTI research group website.
+// ABOUTME: JavaScript for MULTI research group website.
 // ABOUTME: Handles data loading, rendering, and user interactions.
 
 const MULTI = {
@@ -11,13 +11,20 @@ const MULTI = {
     publications: [],
     filteredPublications: [],
     selectedMember: null,
-    searchQuery: ''
+    searchQuery: '',
+    carouselTimer: null,
+    carouselIndex: 0,
+    carouselStep: 0,
+    carouselSetWidth: 0,
+    teamView: 'carousel'  // 'carousel' or 'list'
   },
 
   // ========================================
   // CONSTANTS
   // ========================================
   DEBOUNCE_DELAY: 300,
+  CAROUSEL_PAUSE: 2000,       // Pause per person (ms)
+  CAROUSEL_TRANSITION: 1000,  // Transition duration (ms)
 
   // ========================================
   // INITIALIZATION
@@ -45,6 +52,7 @@ const MULTI = {
 
       self.renderGroup();
       self.renderTeam();
+      self.renderTeamList();
       self.renderPublications();
     }).fail(function(error) {
       console.error('Failed to load data:', error);
@@ -131,13 +139,13 @@ const MULTI = {
     const self = this;
 
     // Team card click
-    $(document).on('click', '.team-card', function(e) {
+    $(document).on('click', '.multi-team-card', function(e) {
       const memberId = $(this).data('member-id');
       self.handleTeamCardClick(memberId);
     });
 
     // Team card keyboard
-    $(document).on('keydown', '.team-card', function(e) {
+    $(document).on('keydown', '.multi-team-card', function(e) {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         $(this).trigger('click');
@@ -146,7 +154,7 @@ const MULTI = {
 
     // Search input
     let searchTimeout;
-    $('#search-input').on('input', function(e) {
+    $('#multi-search-input').on('input', function(e) {
       clearTimeout(searchTimeout);
       searchTimeout = setTimeout(function() {
         self.handleSearch(e.target.value);
@@ -154,12 +162,34 @@ const MULTI = {
     });
 
     // Clear filter
-    $('#clear-filter').on('click', function() {
+    $('#multi-clear-filter').on('click', function() {
       self.clearFilter();
     });
 
+    // Team view toggle
+    $('#multi-view-carousel').on('click', function() {
+      self.setTeamView('carousel');
+    });
+    $('#multi-view-list').on('click', function() {
+      self.setTeamView('list');
+    });
+
+    // Team list item click
+    $(document).on('click', '.multi-team-list-item', function() {
+      const memberId = $(this).data('member-id');
+      self.handleTeamCardClick(memberId);
+    });
+
+    // Team list item keyboard
+    $(document).on('keydown', '.multi-team-list-item', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        $(this).trigger('click');
+      }
+    });
+
     // Copy BibTeX
-    $(document).on('click', '.copy-bibtex', function(e) {
+    $(document).on('click', '.multi-copy-bibtex', function(e) {
       e.preventDefault();
       e.stopPropagation();
       var $btn = $(this);
@@ -179,6 +209,7 @@ const MULTI = {
   // EVENT HANDLERS
   // ========================================
   handleTeamCardClick: function(memberId) {
+    this.stopCarousel();
     if (this.state.selectedMember === memberId) {
       this.clearFilter();
     } else {
@@ -206,7 +237,7 @@ const MULTI = {
   clearFilter: function() {
     this.state.selectedMember = null;
     this.state.searchQuery = '';
-    $('#search-input').val('');
+    $('#multi-search-input').val('');
     this.applyFilters();
     this.updateTeamCardStates();
     this.hideMemberDetail();
@@ -254,35 +285,195 @@ const MULTI = {
   // ========================================
   renderGroup: function() {
     const group = this.state.group;
-    $('#group-name').text(group.name);
-    $('#group-intro').text(group.introduction);
+    $('#multi-group-name').text(group.name);
+    $('#multi-group-intro').text(group.introduction);
   },
 
   renderTeam: function() {
     const self = this;
-    const $container = $('#team-carousel');
+    const $container = $('#multi-team-carousel');
 
     const html = this.state.team.map(function(member) {
-      return '<article class="team-card" data-member-id="' + member.id + '" tabindex="0" role="button" aria-label="View publications by ' + member.name + '">' +
-        '<img class="team-card__photo" src="' + member.photo + '" alt="' + member.name + ', ' + member.position + '" loading="lazy">' +
-        '<h3 class="team-card__name">' + member.name + '</h3>' +
-        '<p class="team-card__position">' + member.position + '</p>' +
-        '<p class="team-card__affiliation">' + member.affiliation + '</p>' +
+      return '<article class="multi-team-card" data-member-id="' + member.id + '" tabindex="0" role="button" aria-label="View publications by ' + member.name + '">' +
+        '<img class="multi-team-card__photo" src="' + (member.photo || 'images/team/placeholder.jpg') + '" alt="' + member.name + ', ' + member.position + '" loading="lazy" onerror="this.src=\'images/team/placeholder.jpg\'">' +
+        '<h3 class="multi-team-card__name">' + member.name + '</h3>' +
+        '<p class="multi-team-card__position">' + member.position + '</p>' +
+        '<p class="multi-team-card__affiliation">' + member.affiliation + '</p>' +
       '</article>';
+    }).join('');
+
+    $container.html(html);
+    this.setupCarousel();
+    this.startCarousel();
+  },
+
+  renderTeamList: function() {
+    const $container = $('#multi-team-list');
+
+    const html = this.state.team.map(function(member) {
+      return '<li class="multi-team-list-item" data-member-id="' + member.id + '" tabindex="0" role="button" aria-label="View details for ' + member.name + '">' +
+        '<span class="multi-team-list-item__name">' + member.name + '</span>' +
+        '<span class="multi-team-list-item__position">' + member.position + '</span>' +
+        '<span class="multi-team-list-item__affiliation">' + member.affiliation + '</span>' +
+      '</li>';
     }).join('');
 
     $container.html(html);
   },
 
+  setTeamView: function(view) {
+    this.state.teamView = view;
+
+    // Update toggle buttons
+    $('#multi-view-carousel')
+      .toggleClass('multi-view-btn--active', view === 'carousel')
+      .attr('aria-pressed', view === 'carousel');
+    $('#multi-view-list')
+      .toggleClass('multi-view-btn--active', view === 'list')
+      .attr('aria-pressed', view === 'list');
+
+    // Show/hide views
+    if (view === 'carousel') {
+      $('#multi-team-carousel').removeAttr('hidden');
+      $('#multi-team-list').attr('hidden', true);
+      this.startCarousel();
+    } else {
+      $('#multi-team-carousel').attr('hidden', true);
+      $('#multi-team-list').removeAttr('hidden');
+      this.stopCarousel();
+      this.updateTeamListStates();
+    }
+  },
+
+  // ========================================
+  // CAROUSEL AUTO-SCROLL
+  // ========================================
+  setupCarousel: function() {
+    const self = this;
+    const $container = $('#multi-team-carousel');
+    const $cards = $container.find('.multi-team-card:not(.multi-team-card--clone)');
+
+    if ($cards.length === 0) return;
+
+    // Calculate dimensions
+    const $firstCard = $cards.first();
+    const cardWidth = $firstCard.outerWidth(true);
+    const gap = parseInt($container.css('gap')) || 32;
+    const step = cardWidth + gap;
+    const setWidth = $cards.length * step;
+
+    // Store for later use
+    this.state.carouselStep = step;
+    this.state.carouselSetWidth = setWidth;
+
+    // Clone all cards and prepend (for backward scrolling)
+    $($cards.get().reverse()).each(function() {
+      const $clone = $(this).clone();
+      $clone.addClass('multi-team-card--clone');
+      $container.prepend($clone);
+    });
+
+    // Clone all cards and append (for forward scrolling)
+    $cards.each(function() {
+      const $clone = $(this).clone();
+      $clone.addClass('multi-team-card--clone');
+      $container.append($clone);
+    });
+
+    // Bind click events to clones
+    $container.find('.multi-team-card--clone').on('click', function() {
+      const memberId = $(this).data('member-id');
+      self.handleTeamCardClick(memberId);
+    });
+
+    // Start at the first original card (after prepended clones)
+    $container.scrollLeft(setWidth);
+    this.state.carouselIndex = 0;
+
+    // Handle manual scroll for infinite looping
+    let scrollTimeout;
+    $container.off('scroll.carousel').on('scroll.carousel', function() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(function() {
+        const scrollLeft = $container.scrollLeft();
+
+        // If scrolled into prepended clones, jump to end of originals
+        if (scrollLeft < step) {
+          $container.scrollLeft(scrollLeft + setWidth);
+        }
+        // If scrolled into appended clones, jump to start of originals
+        else if (scrollLeft >= setWidth + setWidth - step) {
+          $container.scrollLeft(scrollLeft - setWidth);
+        }
+      }, 50);
+    });
+  },
+
+  startCarousel: function() {
+    const self = this;
+    const $container = $('#multi-team-carousel');
+    const originalCount = this.state.team.length;
+
+    if (originalCount === 0) return;
+
+    // Stop any existing timer
+    this.stopCarousel();
+
+    const step = this.state.carouselStep;
+    const setWidth = this.state.carouselSetWidth;
+
+    function scrollNext() {
+      self.state.carouselIndex++;
+      // Target is offset by setWidth because of prepended clones
+      const targetScroll = setWidth + (self.state.carouselIndex * step);
+
+      // Smooth animate to next card
+      $container.stop(true).animate({ scrollLeft: targetScroll }, self.CAROUSEL_TRANSITION, 'swing', function() {
+        // When we've scrolled past all original cards, reset instantly
+        if (self.state.carouselIndex >= originalCount) {
+          self.state.carouselIndex = 0;
+          $container.scrollLeft(setWidth);
+        }
+        // Schedule next scroll after pause
+        self.state.carouselTimer = setTimeout(scrollNext, self.CAROUSEL_PAUSE);
+      });
+    }
+
+    // Start first scroll after initial pause
+    this.state.carouselTimer = setTimeout(scrollNext, this.CAROUSEL_PAUSE);
+
+    // Pause on hover
+    $container.off('mouseenter.carousel mouseleave.carousel');
+    $container.on('mouseenter.carousel', function() {
+      self.stopCarousel();
+      $container.stop(true);
+    });
+    $container.on('mouseleave.carousel', function() {
+      // Reset index to current visible card position (accounting for prepended clones)
+      const currentScroll = $container.scrollLeft() - setWidth;
+      self.state.carouselIndex = Math.round(currentScroll / step);
+      if (self.state.carouselIndex < 0) self.state.carouselIndex = 0;
+      if (self.state.carouselIndex >= originalCount) self.state.carouselIndex = 0;
+      self.startCarousel();
+    });
+  },
+
+  stopCarousel: function() {
+    if (this.state.carouselTimer) {
+      clearTimeout(this.state.carouselTimer);
+      this.state.carouselTimer = null;
+    }
+  },
+
   renderPublications: function() {
-    const $container = $('#publications-list');
-    const $count = $('#results-count');
+    const $container = $('#multi-publications-list');
+    const $count = $('#multi-results-count');
     const publications = this.state.filteredPublications;
 
     $count.text(publications.length + ' publication' + (publications.length !== 1 ? 's' : ''));
 
     if (publications.length === 0) {
-      $container.html('<p class="no-results">No publications found.</p>');
+      $container.html('<p class="multi-no-results">No publications found.</p>');
       return;
     }
 
@@ -291,7 +482,7 @@ const MULTI = {
       if (pub.url) {
         links += '<a href="' + pub.url + '" target="_blank" rel="noopener">PDF</a>';
       }
-      links += '<button type="button" class="btn--text copy-bibtex" data-pub-index="' + index + '">Copy BibTeX</button>';
+      links += '<button type="button" class="multi-btn--text multi-copy-bibtex" data-pub-index="' + index + '">Copy BibTeX</button>';
       if (pub.doi) {
         links += '<a href="https://doi.org/' + pub.doi + '" target="_blank" rel="noopener">DOI</a>';
       }
@@ -304,11 +495,11 @@ const MULTI = {
         venueText = pub.venue + ', ' + pub.year;
       }
 
-      return '<article class="publication-item">' +
-        '<h3 class="publication-item__title">' + pub.title + '</h3>' +
-        '<p class="publication-item__authors">' + pub.authors.join(', ') + '</p>' +
-        '<p class="publication-item__venue">' + venueText + '</p>' +
-        '<div class="publication-item__links">' + links + '</div>' +
+      return '<article class="multi-publication-item">' +
+        '<h3 class="multi-publication-item__title">' + pub.title + '</h3>' +
+        '<p class="multi-publication-item__authors">' + pub.authors.join(', ') + '</p>' +
+        '<p class="multi-publication-item__venue">' + venueText + '</p>' +
+        '<div class="multi-publication-item__links">' + links + '</div>' +
       '</article>';
     }).join('');
 
@@ -320,25 +511,36 @@ const MULTI = {
   // ========================================
   updateTeamCardStates: function() {
     const selectedId = this.state.selectedMember;
-    $('.team-card').each(function() {
+    $('.multi-team-card').each(function() {
       const $card = $(this);
       const isSelected = $card.data('member-id') === selectedId;
-      $card.toggleClass('team-card--selected', isSelected);
+      $card.toggleClass('multi-team-card--selected', isSelected);
       $card.attr('aria-pressed', isSelected);
+    });
+    this.updateTeamListStates();
+  },
+
+  updateTeamListStates: function() {
+    const selectedId = this.state.selectedMember;
+    $('.multi-team-list-item').each(function() {
+      const $item = $(this);
+      const isSelected = $item.data('member-id') === selectedId;
+      $item.toggleClass('multi-team-list-item--selected', isSelected);
+      $item.attr('aria-pressed', isSelected);
     });
   },
 
   showFilterIndicator: function() {
     const member = this.state.team.find(m => m.id === this.state.selectedMember);
     if (member) {
-      $('#filter-text').text('Showing publications by ' + member.name);
-      $('#filter-indicator').removeAttr('hidden');
+      $('#multi-filter-text').text('Showing publications by ' + member.name);
+      $('#multi-filter-indicator').removeAttr('hidden');
       this.announce('Filtered to publications by ' + member.name);
     }
   },
 
   hideFilterIndicator: function() {
-    $('#filter-indicator').attr('hidden', true);
+    $('#multi-filter-indicator').attr('hidden', true);
     this.announce('Filter cleared, showing all publications');
   },
 
@@ -346,20 +548,28 @@ const MULTI = {
     const member = this.state.team.find(m => m.id === this.state.selectedMember);
     if (!member) return;
 
-    // Research banner
-    $('#member-banner').attr('src', member.researchBanner || '').attr('alt', member.name + ' research visualization');
+    // Research banner (with fallback)
+    var $banner = $('#multi-member-banner');
+    $banner.off('error').on('error', function() {
+      $(this).attr('src', 'images/research/multi-banner.png');
+    });
+    $banner.attr('src', member.researchBanner || 'images/research/multi-banner.png').attr('alt', member.name + ' research visualization');
 
-    // Photo
-    $('#member-photo').attr('src', member.photo).attr('alt', member.name);
+    // Photo (with fallback)
+    var $photo = $('#multi-member-photo');
+    $photo.off('error').on('error', function() {
+      $(this).attr('src', 'images/team/placeholder.jpg');
+    });
+    $photo.attr('src', member.photo || 'images/team/placeholder.jpg').attr('alt', member.name);
 
     // Name
-    $('#member-name').text(member.name);
+    $('#multi-member-name').text(member.name);
 
     // Titles
     const titlesHtml = (member.titles || []).map(function(title) {
       return '<li>' + title + '</li>';
     }).join('');
-    $('#member-titles').html(titlesHtml);
+    $('#multi-member-titles').html(titlesHtml);
 
     // Contact
     let contactHtml = '';
@@ -369,28 +579,28 @@ const MULTI = {
     if (member.website) {
       contactHtml += '<a href="' + member.website + '" target="_blank" rel="noopener">Personal website</a>';
     }
-    $('#member-contact').html(contactHtml);
+    $('#multi-member-contact').html(contactHtml);
 
     // Background (supports HTML)
-    $('#member-background').html(member.background || '');
+    $('#multi-member-background').html(member.background || '');
 
     // Research interests
     const interestsHtml = (member.researchInterests || []).map(function(interest) {
       return '<li>' + interest + '</li>';
     }).join('');
-    $('#member-interests').html(interestsHtml);
+    $('#multi-member-interests').html(interestsHtml);
 
     // Show section
-    $('#member-detail').removeAttr('hidden');
+    $('#multi-member-detail').removeAttr('hidden');
   },
 
   hideMemberDetail: function() {
-    $('#member-detail').attr('hidden', true);
+    $('#multi-member-detail').attr('hidden', true);
   },
 
   scrollToMemberDetail: function() {
     $('html, body').animate({
-      scrollTop: $('#member-detail').offset().top - 100
+      scrollTop: $('#multi-member-detail').offset().top - 100
     }, 300);
   },
 
@@ -398,7 +608,7 @@ const MULTI = {
   // ACCESSIBILITY
   // ========================================
   announce: function(message) {
-    $('#aria-announcer').text(message);
+    $('#multi-aria-announcer').text(message);
   },
 
   // ========================================
@@ -442,8 +652,8 @@ const MULTI = {
   // ERROR HANDLING
   // ========================================
   showError: function(message) {
-    const $error = $('<div class="error-message" role="alert"><p>' + message + '</p></div>');
-    $('main').prepend($error);
+    const $error = $('<div class="multi-error-message" role="alert"><p>' + message + '</p></div>');
+    $('.multi-main').prepend($error);
   }
 };
 

@@ -123,10 +123,14 @@ Each team member entry must include:
 |-------|----------|-------------|
 | id | Yes | Unique identifier (lowercase, hyphenated) |
 | name | Yes | Display name |
-| position | Yes | Title/role in group |
-| email | Yes | Contact email |
+| position | Yes | Short title for team card |
+| affiliation | Yes | Primary institution |
+| titles | Yes | Array of full titles/positions |
+| email | No | Contact email |
+| website | No | Personal website URL |
 | photo | Yes | Path to headshot image |
-| background | Yes | 1-2 sentence background |
+| researchBanner | Yes | Path to research visualization image |
+| background | Yes | Biography paragraph (supports HTML) |
 | researchInterests | Yes | Array of interest areas |
 | authorVariants | Yes | Name variations used in publications |
 
