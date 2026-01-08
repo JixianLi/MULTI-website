@@ -95,6 +95,15 @@
         "Postdoctoral Researcher, Scientific Computing and Imaging Institute, University of Utah"
       ],
       "email": "touermi@sci.utah.edu",
+      "website": "https://ouermijudicael.github.io/",
+      "background": "I am a postdoctoral research associate at the scientific computing and imaging SCI institute under the mentorship of Prof. Chris Johnson. I received my bachelor's degree in Physics and Computer Science from the University of Oregon in 2016 and my Ph.D. in Computing from the University of Utah in 2022. I was advised by Prof. Martin Berzins and Prof. Mike Kirby for my Ph.D. dissertation and by Prof. Hank Child for my undergraduate thesis.",
+      "researchInterests": [
+        "Uncertainty Quantification",
+        "Uncertainty Visualization",
+        "Scientific Computing",
+        "Robust High-Dimensional Data Reduction",
+        "High-performance Optimization"
+      ],
       "authorVariants":[
         "T. A. J. Ouermi",
         "Timbwaga A. J. Ouermi",
@@ -125,6 +134,7 @@
       ],
       "email": "nmarshak@sci.utah.edu",
       "authorVariants": [
+        "N. Marshak",
         "N. X. Marshak",
         "Nathan X. Marshak"
       ]
