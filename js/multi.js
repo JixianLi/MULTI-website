@@ -381,11 +381,8 @@ const MULTI = {
       $container.append($clone);
     });
 
-    // Bind click events to clones
-    $container.find('.multi-team-card--clone').on('click', function() {
-      const memberId = $(this).data('member-id');
-      self.handleTeamCardClick(memberId);
-    });
+    // Note: Click events on clones are handled by the delegated handler
+    // in bindEvents() which matches all .multi-team-card elements
 
     // Start at the first original card (after prepended clones)
     $container.scrollLeft(setWidth);
