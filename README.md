@@ -55,3 +55,7 @@ Content is separated from code. Edit these files to update the website:
 | `data/publications.bib` | Publications (BibTeX format) |
 
 See [CONTENT-UPDATE.md](docs/CONTENT-UPDATE.md) for editing instructions.
+
+## Acknowledgments
+
+This project was developed with assistance from [Claude Code](https://claude.com/claude-code), Anthropic's AI-powered coding assistant, using the Claude Opus 4.5 model.
