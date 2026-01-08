@@ -436,14 +436,16 @@ const MULTI = {
         // When we've scrolled past all original cards, reset instantly
         if (self.state.carouselIndex >= originalCount) {
           self.state.carouselIndex = 0;
-          // Use setTimeout for Safari compatibility - ensures reset happens after animation frame
+          // Use longer delay for Safari - ensures scroll events have settled
           setTimeout(function() {
             $container.scrollLeft(setWidth);
-            // Mark auto-scrolling complete after reset
-            self.state.carouselAutoScrolling = false;
+            // Keep auto-scrolling flag true a bit longer to block any pending scroll events
+            setTimeout(function() {
+              self.state.carouselAutoScrolling = false;
+            }, 100);
             // Schedule next scroll after pause
             self.state.carouselTimer = setTimeout(scrollNext, self.CAROUSEL_PAUSE);
-          }, 0);
+          }, 20);
         } else {
           // Mark auto-scrolling complete
           self.state.carouselAutoScrolling = false;
