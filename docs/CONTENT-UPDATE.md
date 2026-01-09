@@ -57,10 +57,19 @@ This guide explains how to update website content **without touching any code**.
 
 **Research Banner:**
 1. Get a wide image showcasing the member's research (visualization, figure, etc.)
-2. Recommended dimensions: 1200x400 pixels (3:1 aspect ratio)
-3. Save as JPEG or PNG, under 500KB
-4. Name it `firstname-lastname-banner.jpg` (all lowercase)
-5. Place in `images/research/` folder
+2. **Dimensions: 2400×400 pixels (6:1 aspect ratio)**
+3. **Important:** Place key visual content in the **center 25%** of the image (center 600px). The sides get cropped on narrow screens.
+4. Save as JPEG or PNG, under 500KB
+5. Name it `firstname-lastname-banner.jpg` (all lowercase)
+6. Place in `images/research/` folder
+
+```
+┌─────────────────────────────────────────────────────┐
+│  cropped on   │   ALWAYS VISIBLE   │  cropped on    │
+│  mobile       │   (center 600px)   │  mobile        │
+└─────────────────────────────────────────────────────┘
+         ←────────── 2400px ──────────→
+```
 
 ### Step 2: Add the Entry
 
