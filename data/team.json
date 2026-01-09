@@ -47,7 +47,7 @@
       "website": "https://tusharathawale.info/",
       "photo": "images/team/tushar-athawale.jpg",
       "researchBanner": "images/research/tushar-athawale-banner.png",
-      "background": "Tushar Athawale is a Research Scientist in the Visualization Group at Oak Ridge National Laboratory. He holds the position of Joint Faculty Assistant Professor in Electrical Engineering and Computer Science (EECS) Department of the University of Tennessee, Knoxville. He received M.S. and Ph.D. degrees in computer science from the University of Florida in 2014 and 2015, respectively. Before joining ORNL, he was Dr. Chris Johnson's postdoctoral fellow at the SCI Institute. He currently serves as the Associate Editor for the IEEE Transactions on Visualization and Computer Graphics journal and a program chair for the IEEE VIS 2026 conference. He received the U.S. Department of Energy's Early Career Research Award in 2025.",
+      "background": "Tushar Athawale is a Research Scientist in the Visualization Group at Oak Ridge National Laboratory. He holds the position of Joint Faculty Assistant Professor in Electrical Engineering and Computer Science (EECS) Department of the University of Tennessee, Knoxville. He received M.S. and Ph.D. degrees in computer science from the University of Florida in 2014 and 2015, respectively. Before joining ORNL, he was Dr. Chris Johnson's postdoctoral fellow at the SCI Institute. He currently serves as the Associate Editor for the IEEE Transactions on Visualization and Computer Graphics journal and a program chair for the IEEE VIS 2026 conference.",
       "researchInterests": [
         "Uncertainty Visualization",
         "Large-scale visualization",
@@ -94,7 +94,17 @@
       "titles": [
         "Postdoctoral Researcher, Scientific Computing and Imaging Institute, University of Utah"
       ],
+      "photo": "images/team/tajo.jpg",
       "email": "touermi@sci.utah.edu",
+      "website": "https://ouermijudicael.github.io/",
+      "background": "I am a postdoctoral research associate at the scientific computing and imaging SCI institute under the mentorship of Prof. Chris Johnson. I received my bachelor's degree in Physics and Computer Science from the University of Oregon in 2016 and my Ph.D. in Computing from the University of Utah in 2022. I was advised by Prof. Martin Berzins and Prof. Mike Kirby for my Ph.D. dissertation and by Prof. Hank Child for my undergraduate thesis.",
+      "researchInterests": [
+        "Uncertainty Quantification",
+        "Uncertainty Visualization",
+        "Scientific Computing",
+        "Robust High-Dimensional Data Reduction",
+        "High-performance Optimization"
+      ],
       "authorVariants":[
         "T. A. J. Ouermi",
         "Timbwaga A. J. Ouermi",
@@ -127,6 +137,21 @@ Her research focuses on scientific visualization using deep learning, with parti
       ]
     },
     {
+      "id": "nmarshak",
+      "name": "Nathan X. Marshak",
+      "position": "PhD Student",
+      "affiliation": "Scientific Computing and Imaging Institute, University of Utah",
+      "titles": [
+        "PhD Student, Scientific Computing and Imaging Institute, University of Utah"
+      ],
+      "email": "nmarshak@sci.utah.edu",
+      "authorVariants": [
+        "N. Marshak",
+        "N. X. Marshak",
+        "Nathan X. Marshak"
+      ]
+    },
+    {
       "id": "tpat",
       "name": "Tark Patel",
       "position": "PhD Student",
@@ -138,20 +163,6 @@ Her research focuses on scientific visualization using deep learning, with parti
       "authorVariants": [
         "T. Patel",
         "Tark Patel"
-      ]
-    },
-    {
-      "id": "nmarshak",
-      "name": "Nathan X. Marshak",
-      "position": "PhD Student",
-      "affiliation": "Scientific Computing and Imaging Institute, University of Utah",
-      "titles": [
-        "PhD Student, Scientific Computing and Imaging Institute, University of Utah"
-      ],
-      "email": "nmarshak@sci.utah.edu",
-      "authorVariants": [
-        "N. X. Marshak",
-        "Nathan X. Marshak"
       ]
     }
   ]

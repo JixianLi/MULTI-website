@@ -399,11 +399,11 @@ const MULTI = {
         const scrollLeft = $container.scrollLeft();
 
         // If scrolled into prepended clones, jump to end of originals
-        if (scrollLeft < step) {
+        if (scrollLeft < step / 2) {
           $container.scrollLeft(scrollLeft + setWidth);
         }
         // If scrolled into appended clones, jump to start of originals
-        else if (scrollLeft >= setWidth + setWidth - step) {
+        else if (scrollLeft > setWidth + setWidth - step / 2) {
           $container.scrollLeft(scrollLeft - setWidth);
         }
       }, 50);
@@ -436,12 +436,22 @@ const MULTI = {
         // When we've scrolled past all original cards, reset instantly
         if (self.state.carouselIndex >= originalCount) {
           self.state.carouselIndex = 0;
-          $container.scrollLeft(setWidth);
+          // Use longer delay for Safari - ensures scroll events have settled
+          setTimeout(function() {
+            $container.scrollLeft(setWidth);
+            // Keep auto-scrolling flag true a bit longer to block any pending scroll events
+            setTimeout(function() {
+              self.state.carouselAutoScrolling = false;
+            }, 100);
+            // Schedule next scroll after pause
+            self.state.carouselTimer = setTimeout(scrollNext, self.CAROUSEL_PAUSE);
+          }, 20);
+        } else {
+          // Mark auto-scrolling complete
+          self.state.carouselAutoScrolling = false;
+          // Schedule next scroll after pause
+          self.state.carouselTimer = setTimeout(scrollNext, self.CAROUSEL_PAUSE);
         }
-        // Mark auto-scrolling complete
-        self.state.carouselAutoScrolling = false;
-        // Schedule next scroll after pause
-        self.state.carouselTimer = setTimeout(scrollNext, self.CAROUSEL_PAUSE);
       });
     }
 
