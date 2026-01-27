@@ -287,7 +287,7 @@ const MULTI = {
   renderGroup: function() {
     const group = this.state.group;
     $('#multi-group-name').text(group.name);
-    $('#multi-group-intro').text(group.introduction);
+    $('#multi-group-intro').html(group.introduction);
   },
 
   renderTeam: function() {
