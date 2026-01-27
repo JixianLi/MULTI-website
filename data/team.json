@@ -162,6 +162,14 @@
         "PhD Student, Scientific Computing and Imaging Institute, University of Utah"
       ],
       "email": "tpat@sci.utah.edu",
+      "photo": "images/team/tark.jpg",
+        "background": "Tark Patel is a Ph.D. student in the graphics and visualization track. He received his bachelor's degree in computer science at the University of Utah. His area of research is uncertainty visualization of diffusion MRI, particularly visualizing model uncertainty with glyphs. He develops methods for uncertainty quantification and mesh generation. Visualization techniques for this work leverage volume rendering and ray tracing."
+      "researchInterests": [
+        "Uncertainty Quantification",
+        "Uncertainty Visualization",
+        "Biomedical computing",
+        "Computer Graphics"
+      ],
       "authorVariants": [
         "T. Patel",
         "Tark Patel"
