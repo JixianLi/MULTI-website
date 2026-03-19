@@ -3,7 +3,7 @@ jQuery(document).ready(function ($) {
     // global function for activating umc icons
     window.umcIconActivate = function () {
 
-        const baseURL = '/wp-content/themes/umctheme3/icon-library/icons';
+        const baseURL = '/UofU/icon-library/icons';
 
         $('.umc-icon').each(function () {
 
