@@ -1,0 +1,91 @@
+{
+  "header": {
+    "department": {
+      "name": "Scientific Computing and Imaging Institute",
+      "url": "https://sci.utah.edu",
+      "logo": "https://sci.utah.edu/wp-content/uploads/2025/05/sci2024-wt.png"
+    },
+    "mainNav": [
+      {
+        "label": "About",
+        "url": "#multi-main",
+        "title": "About MULTI Research Group"
+      },
+      {
+        "label": "Team",
+        "url": "#multi-team",
+        "title": "Team Members"
+      },
+      {
+        "label": "Publications",
+        "url": "#multi-publications",
+        "title": "Research Publications"
+      },
+      {
+        "label": "SCI Institute",
+        "url": "https://sci.utah.edu",
+        "title": "Visit SCI Institute website",
+        "external": true
+      }
+    ]
+  },
+  "footer": {
+    "department": {
+      "name": "Scientific Computing and Imaging Institute",
+      "address": {
+        "line1": "72 So. Central Campus Drive",
+        "line2": "Room 3750",
+        "city": "Salt Lake City",
+        "state": "UT",
+        "zip": "84112"
+      },
+      "phone": "801-585-1867",
+      "phoneHref": "tel:801-585-1867"
+    },
+    "legal": [
+      {
+        "label": "Nondiscrimination & Accessibility",
+        "url": "https://www.utah.edu/nondiscrimination/"
+      },
+      {
+        "label": "Disclaimer",
+        "url": "https://www.utah.edu/disclaimer/"
+      },
+      {
+        "label": "Privacy",
+        "url": "https://www.utah.edu/privacy/"
+      },
+      {
+        "label": "Media Contacts",
+        "url": "https://unews.utah.edu/media-contacts/"
+      }
+    ],
+    "social": [
+      {
+        "platform": "Twitter",
+        "url": "https://twitter.com/UofU",
+        "icon": "twitter",
+        "label": "University of Utah on Twitter"
+      },
+      {
+        "platform": "Facebook",
+        "url": "https://www.facebook.com/universityofutah",
+        "icon": "facebook",
+        "label": "University of Utah on Facebook"
+      },
+      {
+        "platform": "Instagram",
+        "url": "https://www.instagram.com/universityofutah/",
+        "icon": "instagram",
+        "label": "University of Utah on Instagram"
+      },
+      {
+        "platform": "YouTube",
+        "url": "https://www.youtube.com/universityofutah",
+        "icon": "youtube",
+        "label": "University of Utah on YouTube"
+      }
+    ],
+    "copyright": "© 2026 THE UNIVERSITY OF UTAH"
+  }
+}

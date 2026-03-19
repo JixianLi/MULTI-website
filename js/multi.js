@@ -44,13 +44,17 @@ const MULTI = {
     $.when(
       $.getJSON('data/group.json'),
       $.getJSON('data/team.json'),
-      $.get('data/publications.bib')
-    ).done(function(groupResp, teamResp, bibResp) {
+      $.get('data/publications.bib'),
+      $.getJSON('data/navigation.json')
+    ).done(function(groupResp, teamResp, bibResp, navResp) {
       self.state.group = groupResp[0];
       self.state.team = teamResp[0].team;
       self.state.publications = self.parseBibtex(bibResp);
       self.state.filteredPublications = [...self.state.publications];
+      self.state.navigation = navResp[0];
 
+      self.renderNavigation();
+      self.renderFooter();
       self.renderGroup();
       self.renderTeam();
       self.renderTeamList();
@@ -204,6 +208,38 @@ const MULTI = {
         }, 1500);
       }
     });
+
+    // Back to top button
+    const $backToTop = $('#multi-back-to-top');
+    
+    $(window).on('scroll', function() {
+      if ($(this).scrollTop() > 300) {
+        $backToTop.prop('hidden', false);
+      } else {
+        $backToTop.prop('hidden', true);
+      }
+    });
+    
+    $backToTop.on('click', function() {
+      $('html, body').animate({ scrollTop: 0 }, 600);
+    });
+
+    // Hamburger menu toggle
+    $('#multi-hamburger').on('click', function() {
+      self.toggleSidenav();
+    });
+
+    // Overlay click to close
+    $('#multi-sidenav-overlay').on('click', function() {
+      self.closeSidenav();
+    });
+
+    // ESC key to close sidenav
+    $(document).on('keydown', function(e) {
+      if (e.key === 'Escape' && $('#multi-sidenav').attr('aria-hidden') === 'false') {
+        self.closeSidenav();
+      }
+    });
   },
 
   // ========================================
@@ -221,6 +257,33 @@ const MULTI = {
   handleSearch: function(query) {
     this.state.searchQuery = query.toLowerCase().trim();
     this.applyFilters();
+  },
+
+  toggleSidenav: function() {
+    const $sidenav = $('#multi-sidenav');
+    const $overlay = $('#multi-sidenav-overlay');
+    const $hamburger = $('#multi-hamburger');
+    const isOpen = $sidenav.attr('aria-hidden') === 'false';
+
+    if (isOpen) {
+      this.closeSidenav();
+    } else {
+      $sidenav.attr('aria-hidden', 'false').prop('hidden', false);
+      $overlay.attr('aria-hidden', 'false').prop('hidden', false);
+      $hamburger.attr('aria-expanded', 'true');
+      $('body').css('overflow', 'hidden');
+    }
+  },
+
+  closeSidenav: function() {
+    const $sidenav = $('#multi-sidenav');
+    const $overlay = $('#multi-sidenav-overlay');
+    const $hamburger = $('#multi-hamburger');
+    
+    $sidenav.attr('aria-hidden', 'true').prop('hidden', true);
+    $overlay.attr('aria-hidden', 'true').prop('hidden', true);
+    $hamburger.attr('aria-expanded', 'false');
+    $('body').css('overflow', '');
   },
 
   // ========================================
@@ -284,6 +347,76 @@ const MULTI = {
   // ========================================
   // RENDERING
   // ========================================
+  renderNavigation: function() {
+    const nav = this.state.navigation.header;
+    
+    // Render main navigation in side panel
+    const navHtml = '<ul>' +
+      nav.mainNav.map(function(item) {
+        return '<li><a href="' + item.url + '" title="' + item.title + '"' +
+          (item.external ? ' target="_blank" rel="noopener noreferrer"' : '') +
+          '>' + item.label + '</a></li>';
+      }).join('') +
+      '</ul>';
+    
+    $('#multi-main-nav').html(navHtml);
+
+    // Smooth scroll for anchor links
+    $('#multi-main-nav a[href^="#"]').on('click', function(e) {
+      e.preventDefault();
+      const target = $(this.getAttribute('href'));
+      if (target.length) {
+        // Close sidenav
+        MULTI.closeSidenav();
+        // Scroll to target
+        $('html, body').animate({
+          scrollTop: target.offset().top - 80
+        }, 600);
+      }
+    });
+  },
+
+  renderFooter: function() {
+    const footer = this.state.navigation.footer;
+    
+    // Render department name and address
+    $('#multi-footer-dept-name').text(footer.department.name);
+    
+    const addr = footer.department.address;
+    const addressHtml = 
+      addr.line1 + '<br>' +
+      (addr.line2 ? addr.line2 + '<br>' : '') +
+      addr.city + ', ' + addr.state + ' ' + addr.zip + '<br>' +
+      '<a href="' + footer.department.phoneHref + '">' + footer.department.phone + '</a>';
+    $('#multi-footer-address').html(addressHtml);
+    
+    // Render legal links
+    const legalHtml = footer.legal.map(function(link) {
+      return '<a href="' + link.url + '" target="_blank" rel="noopener noreferrer">' + 
+        link.label + '</a>';
+    }).join('');
+    $('#multi-footer-legal').html(legalHtml);
+    
+    // Render social media icons with Unicode symbols
+    const socialIcons = {
+      'twitter': '𝕏',
+      'facebook': 'f',
+      'instagram': '📷',
+      'youtube': '▶'
+    };
+    
+    const socialHtml = footer.social.map(function(link) {
+      return '<a href="' + link.url + '" target="_blank" rel="noopener noreferrer" ' +
+        'aria-label="' + link.label + '" title="' + link.label + '">' + 
+        (socialIcons[link.icon] || link.platform.charAt(0).toUpperCase()) +
+        '</a>';
+    }).join('');
+    $('#multi-footer-social').html(socialHtml);
+    
+    // Render copyright
+    $('#multi-footer-copyright').text(footer.copyright);
+  },
+
   renderGroup: function() {
     const group = this.state.group;
     $('#multi-group-name').text(group.name);

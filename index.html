@@ -17,10 +17,37 @@
   <a href="#multi-main" class="multi-skip-link">Skip to main content</a>
 
   <!-- Header -->
-  <header class="multi-site-header" role="banner" style="background: #000;">
-    <div class="multi-container">
-      <p style="margin: 0; padding: 1rem 0; color: #999;">Local test header. Replace with SCI template at deployment.</p>
+  <header class="multi-site-header" role="banner">
+    <div class="multi-site-header__container">
+      <!-- University Logo -->
+      <a href="https://www.utah.edu" class="multi-site-header__u-logo" aria-label="University of Utah">
+        <img src="UofU/img/uu-logo-white.svg" alt="University of Utah" class="multi-site-header__u-logo-img">
+      </a>
+
+      <!-- Department Info -->
+      <div class="multi-site-header__dept">
+        <a href="https://sci.utah.edu" class="multi-site-header__dept-link">
+          <span class="multi-site-header__dept-name">SCIENTIFIC COMPUTING AND IMAGING INSTITUTE</span>
+        </a>
+      </div>
+
+      <!-- Hamburger Menu Button -->
+      <button type="button" class="multi-hamburger" id="multi-hamburger" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span class="multi-hamburger__line"></span>
+        <span class="multi-hamburger__line"></span>
+        <span class="multi-hamburger__line"></span>
+      </button>
     </div>
+
+    <!-- Side Navigation Panel -->
+    <nav class="multi-sidenav" id="multi-sidenav" aria-label="Main navigation" aria-hidden="true" hidden>
+      <div class="multi-sidenav__content" id="multi-main-nav">
+        <!-- Loaded from navigation.json -->
+      </div>
+    </nav>
+
+    <!-- Overlay -->
+    <div class="multi-sidenav-overlay" id="multi-sidenav-overlay" aria-hidden="true" hidden></div>
   </header>
 
   <!-- Main Content -->
@@ -30,9 +57,51 @@
 
   <!-- Footer -->
   <footer class="multi-site-footer" role="contentinfo">
-    <div class="multi-container">
-      <p style="margin: 0; padding: 1rem 0; color: #999;">Local test footer. Replace with SCI template at deployment.</p>
+    <!-- SCI Logo Section -->
+    <div class="multi-site-footer__sci">
+      <a href="https://sci.utah.edu" class="multi-site-footer__sci-logo" aria-label="SCI Institute">
+        <img src="https://sci.utah.edu/wp-content/uploads/2025/05/sci2024-wt.png" alt="Scientific Computing and Imaging Institute">
+      </a>
     </div>
+
+    <div class="multi-site-footer__main">
+      <!-- SCI Department Info -->
+      <div class="multi-site-footer__dept">
+        <div class="multi-site-footer__dept-name" id="multi-footer-dept-name">
+          <!-- Loaded from navigation.json -->
+        </div>
+        <address class="multi-site-footer__address" id="multi-footer-address">
+          <!-- Loaded from navigation.json -->
+        </address>
+      </div>
+
+      <!-- University Branding & Legal -->
+      <div class="multi-site-footer__university">
+        <a href="https://www.utah.edu" class="multi-site-footer__u-logo" aria-label="University of Utah">
+          <img src="UofU/img/uu-logo-white.svg" alt="University of Utah">
+        </a>
+        <div class="multi-site-footer__legal" id="multi-footer-legal">
+          <!-- Loaded from navigation.json -->
+        </div>
+      </div>
+
+      <!-- Social Media -->
+      <div class="multi-site-footer__social" id="multi-footer-social">
+        <!-- Loaded from navigation.json -->
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="multi-site-footer__copyright">
+      <p id="multi-footer-copyright"><!-- Loaded from navigation.json --></p>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button type="button" class="multi-back-to-top" aria-label="Back to top" id="multi-back-to-top" hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
   </footer>
 
   <!-- jQuery -->

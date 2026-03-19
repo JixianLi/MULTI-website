@@ -89,18 +89,180 @@ img {
    HEADER
    ======================================== */
 .multi-site-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #000;
+  color: #fff;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.multi-site-header__container {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0.75rem var(--container-padding);
+}
+
+.multi-site-header__u-logo {
+  flex-shrink: 0;
+  display: block;
+  transition: opacity 0.2s;
+}
+
+.multi-site-header__u-logo:hover {
+  opacity: 0.8;
+}
+
+.multi-site-header__u-logo-img {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
+.multi-site-header__dept {
+  flex: 1;
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  padding-left: 1.5rem;
+}
+
+.multi-site-header__dept-link {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.multi-site-header__dept-link:hover {
+  opacity: 0.8;
+}
+
+.multi-site-header__dept-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Hamburger Menu Button */
+.multi-hamburger {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  transition: background-color 0.2s;
+  border-radius: 4px;
+}
+
+.multi-hamburger:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.multi-hamburger__line {
+  width: 28px;
+  height: 3px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+.multi-hamburger[aria-expanded="true"] .multi-hamburger__line:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+
+.multi-hamburger[aria-expanded="true"] .multi-hamburger__line:nth-child(2) {
+  opacity: 0;
+}
+
+.multi-hamburger[aria-expanded="true"] .multi-hamburger__line:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+/* Side Navigation Panel */
+.multi-sidenav {
+  position: fixed;
+  top: 0;
+  right: -350px;
+  width: 350px;
+  height: 100vh;
+  background: #000;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
+  transition: right 0.3s ease-in-out;
+  z-index: 101;
+  overflow-y: auto;
+}
+
+.multi-sidenav[aria-hidden="false"] {
+  right: 0;
+}
+
+.multi-sidenav__content {
+  padding: 5rem 2rem 2rem;
+}
+
+.multi-sidenav__content ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.multi-sidenav__content li {
+  margin-bottom: 0.5rem;
+}
+
+.multi-sidenav__content a {
+  display: block;
+  padding: 1rem;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.125rem;
+  font-weight: 600;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.multi-sidenav__content a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.multi-sidenav__content a[href^="http"]::after {
+  content: " ↗";
+  font-size: 0.75em;
+  margin-left: 0.25em;
+}
+
+/* Overlay */
+.multi-sidenav-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: var(--header-height);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-sm);
-  z-index: 100;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.multi-sidenav-overlay[aria-hidden="false"] {
+  opacity: 1;
 }
 
 .multi-main {
-  padding-top: var(--header-height);
+  min-height: 60vh;
 }
 
 /* ========================================
@@ -523,9 +685,180 @@ img {
    FOOTER
    ======================================== */
 .multi-site-footer {
-  padding: var(--space-lg) 0;
-  background: var(--color-text);
-  color: white;
+  background: #000;
+  color: #fff;
+  padding: 0;
+}
+
+.multi-site-footer__sci {
+  background: #1a1a1a;
+  padding: 2rem var(--container-padding);
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.multi-site-footer__sci-logo {
+  display: inline-block;
+  transition: opacity 0.2s;
+}
+
+.multi-site-footer__sci-logo:hover {
+  opacity: 0.8;
+}
+
+.multi-site-footer__sci-logo img {
+  height: 60px;
+  width: auto;
+  display: block;
+}
+
+.multi-site-footer__main {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 2.5rem var(--container-padding);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.multi-site-footer__dept {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.multi-site-footer__dept-name {
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.multi-site-footer__address {
+  font-style: normal;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.multi-site-footer__address a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.multi-site-footer__address a:hover {
+  color: var(--color-primary);
+}
+
+.multi-site-footer__university {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.multi-site-footer__u-logo {
+  display: block;
+  transition: opacity 0.2s;
+}
+
+.multi-site-footer__u-logo:hover {
+  opacity: 0.8;
+}
+
+.multi-site-footer__u-logo img {
+  height: 38px;
+  width: auto;
+  display: block;
+}
+
+.multi-site-footer__legal {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.multi-site-footer__legal a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 0.8125rem;
+  transition: color 0.2s;
+}
+
+.multi-site-footer__legal a:hover {
+  color: var(--color-primary);
+}
+
+.multi-site-footer__social {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.multi-site-footer__social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+  font-size: 1.25rem;
+}
+
+.multi-site-footer__social a:hover {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.multi-site-footer__copyright {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 1.5rem var(--container-padding);
+  text-align: center;
+}
+
+.multi-site-footer__copyright p {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.05em;
+}
+
+.multi-back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s, transform 0.2s;
+  z-index: 50;
+}
+
+.multi-back-to-top:hover {
+  background: var(--color-link-hover);
+  transform: translateY(-2px);
+}
+
+.multi-back-to-top:active {
+  transform: translateY(0);
 }
 
 /* ========================================
@@ -553,6 +886,68 @@ input:focus,
 /* ========================================
    RESPONSIVE
    ======================================== */
+
+/* Tablet and below - Stack footer and simplify header */
+@media (max-width: 1024px) {
+  .multi-site-header__container {
+    gap: 1rem;
+  }
+  
+  .multi-site-footer__main {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+  
+  .multi-site-footer__social {
+    justify-content: center;
+  }
+  
+  .multi-site-footer__university {
+    align-items: center;
+  }
+  
+  .multi-site-footer__legal {
+    align-items: center;
+  }
+}
+
+/* Mobile - Further simplify */
+@media (max-width: 768px) {
+  .multi-site-header__u-logo-img {
+    height: 32px;
+  }
+  
+  .multi-site-header__dept {
+    border-left: none;
+    padding-left: 0;
+  }
+  
+  .multi-site-header__dept-name {
+    font-size: 0.875rem;
+  }
+  
+  .multi-hamburger {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .multi-sidenav {
+    width: 280px;
+    right: -280px;
+  }
+  
+  .multi-site-footer__sci-logo img {
+    height: 50px;
+  }
+  
+  .multi-back-to-top {
+    width: 40px;
+    height: 40px;
+    bottom: 1rem;
+    right: 1rem;
+  }
+}
 
 @media (min-width: 992px) {
   .multi-container {
